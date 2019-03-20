@@ -1,9 +1,6 @@
 
 import { h, Component } from "preact";
-import { Routes } from "./routes";
-//import Router from "preact-router";
 import { Login } from "./login";
-import { SetPassword } from "./setpassword";
 import { api } from "../api";
 import { Settings } from "./settings";
 
@@ -19,7 +16,6 @@ interface AppState {
 }
 
 export class App extends Component<AppProps, AppState> {
-    routes: Routes = undefined as any;
 
     constructor(props: AppProps) {
         super(props);
@@ -50,7 +46,6 @@ export class App extends Component<AppProps, AppState> {
 
     onAuth()
     {
-        this.routes.loadRoutes();
         this.setState({authed: true})
     }
 
@@ -58,7 +53,6 @@ export class App extends Component<AppProps, AppState> {
     {
         this.setState({settings: !this.state.settings});
     }
-
     
     async onLogout()
     {
@@ -98,7 +92,7 @@ export class App extends Component<AppProps, AppState> {
                     <div className="app">
                         <div className="header">
                             <span className="logo" />
-                            Birdcage
+                            node-preact-template
                             {!state.authed ? "" : 
                                 <div className="right">
                                     <button type="button" onClick={this.toggleSettings.bind(this)} className="btn settings">
@@ -111,7 +105,6 @@ export class App extends Component<AppProps, AppState> {
                             }                            
                         </div>
                         <div className="body">
-                            <Routes path="/routes" ref={el => this.routes = el}/>
                             <div className={state.settings ? "overlay" : "hidden"}>
                                 <Settings onClose={this.toggleSettings.bind(this)} 
                                     color={this.state.color} onChangeColor={this.onChangeColor.bind(this)} 

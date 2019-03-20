@@ -1,6 +1,6 @@
 import axios from 'restyped-axios'
-import { AdminAPI } from '../shared/admin-api';
+import { API } from '../shared/api';
 
-export const api = axios.create<AdminAPI>({
+export const api = axios.create<API>({
   baseURL: './api/'
 })

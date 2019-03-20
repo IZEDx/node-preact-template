@@ -1,4 +1,4 @@
-import { loadConfig, Config, updateConfig } from "./libs/config";
+import { loadConfig, Config, updateConfig } from "./config";
 import { hash, compare } from "bcrypt";
 
 

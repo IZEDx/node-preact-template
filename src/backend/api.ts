@@ -1,17 +1,16 @@
 
-import { AdminAPI } from "../shared/admin-api";
-import RestypedRouter, { TypedRequest } from 'restyped-express-async';
+import { API } from "../shared/api";
+import RestypedRouter, { TypedRequest } from "restyped-express-async";
 import { Router } from "express";
-import { RouteStorage } from "./storage";
 import { log } from "./libs/utils";
 import { Auth } from "./auth";
 import { RestypedRoute } from "restyped";
 
 const checkAuth = (req: TypedRequest<any>) => !!(req.session && req.session.authed);
 
-export function registerAPI(apiRouter: Router, storage: RouteStorage, auth: Auth)
+export function registerAPI(apiRouter: Router, auth: Auth)
 {
-    const router = RestypedRouter<AdminAPI>(apiRouter);
+    const router = RestypedRouter<API>(apiRouter);
 
     router.get("/auth", async req => {
         try
@@ -85,86 +84,23 @@ export function registerAPI(apiRouter: Router, storage: RouteStorage, auth: Auth
         return { success: true };
     });
 
-    router.get("/routes", async req => {
+    router.get("/hello-world", async req => {
     
         if (!checkAuth(req))
         {
-            return [];
+            return "Good Bye";
         }
-        return storage.routes;
+        return "Hello World";
     });
 
-    router.post("/routes", async req => {
-        try
+    router.post("/hello-world", async req => {
+        if (!checkAuth(req))
         {
-            const {source, target} = req.body;
-    
-            if (!checkAuth(req))
-            {
-                throw new Error("Not logged in!");
-            }
-            
-            if (storage.getRoute(source, target))
-            {
-                throw new Error("Route already exists!");
-            }
-
-
-            await storage.register(req.body);
-            log.interaction(`Added route: ${source} -> ${target}`);
-            return { success: true };
-        }
-        catch(err)
-        {
-            log.error(`Error adding route: ${err.toString()}`);
-            return { success: false, error: err.toString() };
+            return "Good Bye";
         }
 
+        return `Hello ${req.body}`;
     });
-
-    router.put("/routes/:source/:target", async req => {
-        try
-        {
-            const {source, target} = req.body;
-    
-            if (!checkAuth(req))
-            {
-                throw new Error("Not logged in!");
-            }
-
-            await storage.register(req.body);
-            log.interaction(`Updated route: ${source} -> ${target}`);
-            return { success: true };
-        }
-        catch(err)
-        {
-            log.error(`Error adding route: ${err.toString()}`);
-            return { success: false, error: err.toString() };
-        }
-
-    });
-
-    router.delete("/routes/:source/:target", async req => {
-        try
-        {
-            const {source, target} = req.params;
-    
-            if (!checkAuth(req))
-            {
-                throw new Error("Not logged in!");
-            }
-
-            await storage.unregister(source, target);
-            log.interaction(`Deleted route: ${source} -> ${target}`);
-            return { success: true };
-        }
-        catch(err)
-        {
-            log.error(`Error deleting route: ${err.toString()}`);
-            return { success: false, error: err.toString() };
-        }
-    });
-
 
 }
 

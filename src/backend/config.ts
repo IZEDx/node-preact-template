@@ -1,23 +1,15 @@
-import { log, readFile, writeFile } from "./utils";
-import { Route } from "src/shared/admin-api";
+import { log, readFile, writeFile } from "./libs/utils";
 
 const prettyJSON = require("pretty-json-stringify");
-const sampleConfig = require("../config.sample.json");
+const sampleConfig = require("./config.sample.json");
 
 export interface Config
 {
     session_secret: string;
     admin_password: string;
     ports: {
-        http: number;
-        https: number;
-        letsencrypt: number;
         admin: number;
     };
-    certificates: string;
-    production: boolean;
-    "404path": string;
-    routes: Route[];
 }
 
 export async function loadConfig<T extends {} = Config>(path: string = "./config.json"): Promise<T>
